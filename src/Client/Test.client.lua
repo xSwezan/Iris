@@ -1,2 +1,4 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Module = require(ReplicatedStorage.lib)
+local Iris = require(ReplicatedStorage.Iris).Init()
+
+Iris:Connect(Iris.ShowDemoWindow)

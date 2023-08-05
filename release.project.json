@@ -1,20 +1,12 @@
 {
-	"name": "ModuleName",
-	"servePlaceIds": [],
+	"name": "Iris",
 	"tree": {
 		"$className": "DataModel",
 		"ReplicatedStorage": {
 			"$className": "ReplicatedStorage",
 
-			"lib": {
-				"$path": "Packages",
-				"$className": "ModuleScript",
-				"$properties": {
-					"Source": "return require(script.lib)"
-				},
-				"lib": {
-					"$path": "lib"
-				}
+			"Iris": {
+				"$path": "lib"
 			}
 		},
 
