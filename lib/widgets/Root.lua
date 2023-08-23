@@ -29,22 +29,22 @@ return function(Iris, widgets)
                 PopupScreenGui = Instance.new("ScreenGui")
                 PopupScreenGui.ResetOnSpawn = false
                 PopupScreenGui.DisplayOrder = Iris._config.DisplayOrderOffset + 1024 -- room for 1024 regular windows before overlap
-
-                local TooltipContainer = Instance.new("Frame")
-                TooltipContainer.Name = "TooltipContainer"
-                TooltipContainer.AutomaticSize = Enum.AutomaticSize.XY
-                TooltipContainer.Size = UDim2.fromOffset(0, 0)
-                TooltipContainer.BackgroundTransparency = 1
-                TooltipContainer.BorderSizePixel = 0
-
-                widgets.UIListLayout(TooltipContainer, Enum.FillDirection.Vertical, UDim.new(0, Iris._config.FrameBorderSize))
-
-                TooltipContainer.Parent = PopupScreenGui
             else
                 PopupScreenGui = Instance.new("Folder")
             end
             PopupScreenGui.Name = "PopupScreenGui"
             PopupScreenGui.Parent = Root
+
+            local TooltipContainer = Instance.new("Frame")
+            TooltipContainer.Name = "TooltipContainer"
+            TooltipContainer.AutomaticSize = Enum.AutomaticSize.XY
+            TooltipContainer.Size = UDim2.fromOffset(0, 0)
+            TooltipContainer.BackgroundTransparency = 1
+            TooltipContainer.BorderSizePixel = 0
+
+            widgets.UIListLayout(TooltipContainer, Enum.FillDirection.Vertical, UDim.new(0, Iris._config.FrameBorderSize))
+
+            TooltipContainer.Parent = PopupScreenGui
             
             local PseudoWindow = Instance.new("Frame")
             PseudoWindow.Name = "PseudoWindow"

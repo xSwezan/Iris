@@ -219,8 +219,13 @@ local TemplateConfig = {
     utilityDefault = {
         UseScreenGUIs = true,
         Parent = nil,
+        CustomMousePositionCallback = nil,
         DisplayOrderOffset = 127,
         ZIndexOffset = 0,
+
+        CustomInputBeganEvent = nil,
+        CustomInputChangedEvent = nil,
+        CustomInputEndedEvent = nil,
 
         MouseDoubleClickTime = 0.30, -- Time for a double-click, in seconds.
         MouseDoubleClickMaxDist = 6.0, -- Distance threshold to stay in to validate a double-click, in pixels.

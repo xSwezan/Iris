@@ -386,7 +386,7 @@ return function(Iris, widgets)
         local LastMouseXPos = 0
         local ActiveDragNum
     
-        widgets.UserInputService.InputEnded:Connect(function(inputObject)
+        widgets.InputEnded:Connect(function(inputObject)
             if inputObject.UserInputType == Enum.UserInputType.MouseButton1 and AnyActiveDragNum then
                 AnyActiveDragNum = false
                 ActiveDragNum = nil
@@ -394,7 +394,7 @@ return function(Iris, widgets)
         end)
     
         local function updateActiveDrag()
-            local currentMouseX = widgets.UserInputService:GetMouseLocation().X
+            local currentMouseX = widgets.getMouseLocation().X
             local mouseXDelta = currentMouseX - LastMouseXPos
             LastMouseXPos = currentMouseX
             if AnyActiveDragNum == false then
@@ -430,7 +430,7 @@ return function(Iris, widgets)
             end
         end
     
-        widgets.UserInputService.InputChanged:Connect(updateActiveDrag)
+        widgets.InputChanged:Connect(updateActiveDrag)
     
         Iris.WidgetConstructor("DragNum", {
             hasState = true,
@@ -557,7 +557,7 @@ return function(Iris, widgets)
         local AnyActiveSliderNum = false
         local ActiveSliderNum
 
-        widgets.UserInputService.InputEnded:Connect(function(inputObject)
+        widgets.InputEnded:Connect(function(inputObject)
             if (inputObject.UserInputType == Enum.UserInputType.MouseButton1 or inputObject.UserInputType == Enum.UserInputType.Touch) and AnyActiveSliderNum then
                 AnyActiveSliderNum = false
                 ActiveSliderNum = nil
@@ -578,14 +578,14 @@ return function(Iris, widgets)
             local GrabPadding = Iris._config.FramePadding.X
             local decimalFix = Increment < 1 and 0 or 1 -- ??? ?? ??? ?
             local GrabNumPossiblePositions = math.floor((decimalFix + Max - Min) / Increment)
-            local PositionRatio = (widgets.UserInputService:GetMouseLocation().X - (InputFieldContainer.AbsolutePosition.X + GrabPadding)) / (InputFieldContainer.AbsoluteSize.X - 2 * GrabPadding)
+            local PositionRatio = (widgets.getMouseLocation().X - (InputFieldContainer.AbsolutePosition.X + GrabPadding)) / (InputFieldContainer.AbsoluteSize.X - 2 * GrabPadding)
 
             local NewNumber = math.clamp(math.floor(PositionRatio * GrabNumPossiblePositions) * Increment + Min, Min, Max)
             if ActiveSliderNum.state.number.value ~= NewNumber then
                 ActiveSliderNum.state.number:set(NewNumber)
             end
         end
-        widgets.UserInputService.InputChanged:Connect(updateActiveSlider)
+        widgets.InputChanged:Connect(updateActiveSlider)
 
         local function InputFieldContainerOnClick(thisWidget)
             local isCtrlHeld = widgets.UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) or widgets.UserInputService:IsKeyDown(Enum.KeyCode.RightControl)

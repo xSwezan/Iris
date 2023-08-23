@@ -7,6 +7,7 @@ local Types = require(script.Types)
 local Iris = {} :: Types.Iris
 
 Iris._started = false -- has Iris.connect been called yet
+Iris._initiatedOnce = false -- has Iris.Init been called once yet
 Iris._globalRefreshRequested = false -- refresh means that all GUI is destroyed and regenerated, usually because a style change was made and needed to be propogated to all UI
 Iris._localRefreshActive = false -- if true, when _Insert is called, the widget called will be regenerated
 Iris._widgets = {}
@@ -575,6 +576,11 @@ end
 --- @return Iris
 --- Initializes Iris. May only be called once.
 function Iris.Init(parentInstance: BasePlayerGui?, eventConnection: (RBXScriptSignal | () -> {})?): Types.Iris
+    if Iris._initiatedOnce == false then
+        require(script.widgets)(Iris)
+    end
+    Iris._initiatedOnce = true
+
     if parentInstance == nil then
         -- coalesce to playerGui
         parentInstance = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
@@ -803,7 +809,7 @@ Iris._globalRefreshRequested = false -- UpdatingGlobalConfig changes this to tru
 --- Ideally, the DemoWindow should always be available in your UI.
 Iris.ShowDemoWindow = require(script.demoWindow)(Iris)
 
-require(script.widgets)(Iris)
+-- require(script.widgets)(Iris)
 
 --- @class Widgets
 --- Each widget is available through Iris.<widget name\>

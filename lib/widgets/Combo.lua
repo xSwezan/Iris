@@ -142,7 +142,8 @@ return function(Iris, widgets)
         local ChildContainerWidth = UDim.new(0, PreviewContainer.AbsoluteSize.X - 2 * ChildContainerBorderSize)
         ChildContainer.Size = UDim2.new(ChildContainerWidth, UDim.new(0, ChildContainerHeight))
 
-        local ScreenSize = ChildContainer.Parent.AbsoluteSize
+		local OtherGui = ChildContainer:FindFirstAncestorWhichIsA("GuiBase2d")
+        local ScreenSize = OtherGui.AbsoluteSize
 
         if PreviewLabel.AbsolutePosition.Y + thisWidget.LabelHeight + ChildContainerHeight > ScreenSize.Y then
             -- too large to fit below the Combo, so is placed above
@@ -152,7 +153,7 @@ return function(Iris, widgets)
         end
     end
 
-    widgets.UserInputService.InputBegan:Connect(function(inputObject)
+    widgets.InputBegan:Connect(function(inputObject)
         if inputObject.UserInputType ~= Enum.UserInputType.MouseButton1 and inputObject.UserInputType ~= Enum.UserInputType.MouseButton2 and inputObject.UserInputType ~= Enum.UserInputType.Touch then
             return
         end
@@ -162,7 +163,7 @@ return function(Iris, widgets)
         if ComboOpenedTick == Iris._cycleTick then
             return
         end
-        local MouseLocation = widgets.UserInputService:GetMouseLocation() - Vector2.new(0, 36)
+        local MouseLocation = widgets.getMouseLocation() - Vector2.new(0, 36)
         local ChildContainer = OpenedCombo.ChildContainer
         local rectMin = ChildContainer.AbsolutePosition - Vector2.new(0, OpenedCombo.LabelHeight)
         local rectMax = ChildContainer.AbsolutePosition + ChildContainer.AbsoluteSize

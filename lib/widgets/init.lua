@@ -17,6 +17,20 @@ return function(Iris: Types.Iris)
         ALPHA_BACKGROUND_TEXTURE = "rbxasset://textures/meshPartFallback.png" -- used for color4 alpha
     }
 
+    -- custom events have to be set before calling .Init
+    widgets.InputBegan = Iris._config.CustomInputBeganEvent or widgets.UserInputService.InputBegan
+    widgets.InputChanged = Iris._config.CustomInputChangedEvent or widgets.UserInputService.InputChanged
+    widgets.InputEnded = Iris._config.CustomInputEndedEvent or widgets.UserInputService.InputEnded
+
+    function widgets.getMouseLocation(): Vector2
+        local customMousePositionCallback: () -> Vector2? = Iris._config.CustomMousePositionCallback
+        if type(customMousePositionCallback) == "function" then
+            return customMousePositionCallback() -- allows for custom mouse position
+        end
+
+        return widgets.UserInputService:GetMouseLocation()
+    end
+
     widgets.IS_STUDIO = widgets.RunService:IsStudio()
     function widgets.getTime()
         -- time() always returns 0 in the context of plugins

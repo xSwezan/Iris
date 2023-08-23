@@ -4,13 +4,19 @@ return function(Iris, widgets)
             return
         end
         local PopupScreenGui = Iris._rootInstance.PopupScreenGui
-        local TooltipContainer = PopupScreenGui.TooltipContainer
-        local mouseLocation = widgets.UserInputService:GetMouseLocation() - Vector2.new(0, 36)
-        local newPosition = widgets.findBestWindowPosForPopup(mouseLocation, TooltipContainer.AbsoluteSize, Vector2.new(Iris._config.DisplaySafeAreaPadding, Iris._config.DisplaySafeAreaPadding), PopupScreenGui.AbsoluteSize)
+		local TooltipContainer = PopupScreenGui:FindFirstChild("TooltipContainer")
+		if TooltipContainer == nil then
+			return
+		end
+
+        local OtherGui = PopupScreenGui:FindFirstAncestorWhichIsA("GuiBase2d")
+        
+        local mouseLocation = widgets.getMouseLocation() - Vector2.new(0, 36)
+        local newPosition = widgets.findBestWindowPosForPopup(mouseLocation, TooltipContainer.AbsoluteSize, Vector2.new(Iris._config.DisplaySafeAreaPadding, Iris._config.DisplaySafeAreaPadding), if (PopupScreenGui:IsA("GuiBase2d")) then PopupScreenGui.AbsoluteSize elseif (OtherGui) then OtherGui.AbsoluteSize else Vector2.new())
         TooltipContainer.Position = UDim2.fromOffset(newPosition.X, newPosition.Y)
     end
 
-    widgets.UserInputService.InputChanged:Connect(relocateTooltips)
+    widgets.InputChanged:Connect(relocateTooltips)
 
     Iris.WidgetConstructor("Tooltip", { 
         hasState = false,
@@ -104,7 +110,7 @@ return function(Iris, widgets)
                 size = rootParent.AbsoluteSize
             else
                 if rootParent.Parent:IsA("GuiBase2d") then
-                    size = rootParent.AbsoluteSize
+                    size = rootParent.Parent.AbsoluteSize
                 else
                     size = workspace.CurrentCamera.ViewportSize
                 end
@@ -224,7 +230,7 @@ return function(Iris, widgets)
         end
     end
 
-    widgets.UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    widgets.InputBegan:Connect(function(input, gameProcessedEvent)
         if not gameProcessedEvent and input.UserInputType == Enum.UserInputType.MouseButton1 then
             Iris.SetFocusedWindow(nil)
         end
@@ -236,7 +242,7 @@ return function(Iris, widgets)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             if isInsideResize and not isInsideWindow and anyFocusedWindow then
                 local midWindow = focusedWindow.state.position.value + (focusedWindow.state.size.value / 2)
-                local cursorPosition = widgets.UserInputService:GetMouseLocation() - Vector2.new(0, 36) - midWindow
+                local cursorPosition = widgets.getMouseLocation() - Vector2.new(0, 36) - midWindow
 
                 -- check which axis its closest to, then check which side is closest with math.sign
                 if math.abs(cursorPosition.X) * focusedWindow.state.size.value.Y >= math.abs(cursorPosition.Y) * focusedWindow.state.size.value.X then
@@ -258,14 +264,14 @@ return function(Iris, widgets)
         end
     end)
 
-    widgets.UserInputService.InputChanged:Connect(function(input)
+    widgets.InputChanged:Connect(function(input)
         if isDragging then
             local mouseLocation
             if input.UserInputType == Enum.UserInputType.Touch then
                 local location = input.Position
                 mouseLocation = Vector2.new(location.X, location.Y)
             else
-                mouseLocation = widgets.UserInputService:getMouseLocation()
+                mouseLocation = widgets.getMouseLocation()
             end
             local dragInstance = dragWindow.Instance.WindowButton
             local intendedPosition = mouseLocation - moveDeltaCursorPosition
@@ -284,7 +290,7 @@ return function(Iris, widgets)
             if input.UserInputType == Enum.UserInputType.Touch then
                 mouseDelta = input.Delta
             else
-                mouseDelta = widgets.UserInputService:GetMouseLocation() - lastCursorPosition
+                mouseDelta = widgets.getMouseLocation() - lastCursorPosition
             end
 
             local intendedPosition = windowPosition + Vector2.new(
@@ -306,10 +312,10 @@ return function(Iris, widgets)
             resizeWindow.state.position.value = newPosition
         end
 
-        lastCursorPosition = widgets.UserInputService:getMouseLocation()
+        lastCursorPosition = widgets.getMouseLocation()
     end)
 
-    widgets.UserInputService.InputEnded:Connect(function(input, _)
+    widgets.InputEnded:Connect(function(input, _)
         if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and isDragging then
             local dragInstance = dragWindow.Instance.WindowButton
             isDragging = false
@@ -422,7 +428,7 @@ return function(Iris, widgets)
                 if not thisWidget.arguments.NoMove and input.UserInputType == Enum.UserInputType.MouseButton1 then
                     dragWindow = thisWidget
                     isDragging = true
-                    moveDeltaCursorPosition = widgets.UserInputService:GetMouseLocation() - thisWidget.state.position.value
+                    moveDeltaCursorPosition = widgets.getMouseLocation() - thisWidget.state.position.value
                 end
             end)
 
